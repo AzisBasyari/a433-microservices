@@ -48,8 +48,8 @@ jobs:
   build-app-karsajobs:
     # Job ini akan dijalankan di mesin ubuntu
     runs-on: ubuntu-latest
-    # Job ini akan dijalankan setelah job lint-dockerfile
-    needs: lint-dockerfile
+    # Job ini akan dijalankan setelah job lint-dockerfile dan test-app selesai
+    needs: [lint-dockerfile, test-app]
 
     # Langkah-langkah yang akan dilakukan sebagai bagian dari job
     steps:
