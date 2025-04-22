@@ -23,8 +23,9 @@ jobs:
       - name: Install hadolint dari github
         # Menjalankan perintah untuk menginstall hadolint dari github
         run: |
-          wget -O /bin/hadolint hadolint https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64
-          chmod +x /bin/hadolint
+          wget -O hadolint hadolint https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64
+          chmod +x hadolint
+          sudo mv hadolint /usr/local/bin/hadolint
       - name: Menjalankan hadolint
         # Menjalankan perintah untuk melakukan lint kepada dockerfile menggunakan hadolint
         run: hadolint Dockerfile
