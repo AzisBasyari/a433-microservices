@@ -1,0 +1,51 @@
+# This is a basic workflow to help you get started with Actions
+# Nama workflow CI untuk karsajobs-ui
+
+name: karsajobs-ui-ci
+
+# Mengatur kapan jalannya workflow CI ini yaitu ketika push dilakukan ke branch karsajobs-ui
+on: 
+  push:
+    branches: karsajobs-ui
+
+# List jobs yang dilakukan di dalam workflow CI ini
+jobs:
+  # Mendefinisikan jobs untuk melakukan lint pada dockerfile
+  lint-dockerfile:
+    # Job ini akan dijalankan di mesin ubuntu
+    runs-on: ubuntu-latest
+
+    # Langkah-langkah yang akan dilakukan sebagai bagian dari job
+    steps:
+      # Melakukan checkout branch saat ini
+      - uses: actions/checkout@v4
+      # Memberikan nama untuk langkah yang akan dilakukan
+      - name: Install hadolint dari github
+        # Menjalankan perintah untuk menginstall hadolint dari github
+        run: |
+          wget -O /bin/hadolint hadolint https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64
+          chmod +x /bin/hadolint
+      - name: Menjalankan hadolint
+        # Menjalankan perintah untuk melakukan lint kepada dockerfile menggunakan hadolint
+        run: hadolint Dockerfile
+
+  # Mendefinisikan jobs untuk melakukan build app
+  build-app-karsajobs-ui:
+    # Job ini akan dijalankan di mesin ubuntu
+    runs-on: ubuntu-latest
+    # Job ini akan dijalankan setelah job lint-dockerfile
+    needs: lint-dockerfile
+
+    # Langkah-langkah yang akan dilakukan sebagai bagian dari job
+    steps:
+      # Melakukan checkout branch saat ini
+      - uses: actions/checkout@v4
+      # Memberikan nama untuk langkah yang akan dilakukan
+      - name: Build app
+        # Menjalankan perintah untuk menjalankan file shell script build image
+        run: |
+          chmod +x ./build_push_image_karsajobs_ui.sh
+          ./build_push_image_karsajobs_ui.sh
+        # Mendefinisikan env untuk shell script
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
